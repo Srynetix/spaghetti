@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Artifacts
+/*.plantuml
+/*.json
+/out
+/.vscode

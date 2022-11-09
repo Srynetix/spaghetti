@@ -24,8 +24,6 @@ coverage = "^6.5.0"
 pytest-cov = "^4.0.0"
 
 [tool.poetry.scripts]
-fmt = "makefile:format"
-lint = "makefile:lint"
 spaghetti = "spaghetti.cmd:run"
 
 [tool.black]

@@ -1,7 +1,9 @@
+import logging
 from pathlib import Path
 from typing import Optional
 
 import click
+import structlog
 
 from spaghetti.models.parse_result import ParseResult
 from spaghetti.report.implementations.plantuml_report import PlantUMLReport
@@ -18,17 +20,25 @@ from .result.serializers.implementations.json_serializer import (
     ParseResultJsonSerializer,
 )
 
+# Only shows INFO+ messages
+structlog.configure(
+    wrapper_class=structlog.make_filtering_bound_logger(logging.INFO),
+)
 
-@click.group()
+
+@click.group(invoke_without_command=True, no_args_is_help=True)
+@click.version_option()
 def run():
-    """Main entry-point."""
+    """
+    Trace your Python module dependencies to have a better picture before cleaning!
+    """
 
 
-@click.command(help="parse module links from a folder")
+@click.command(help="generate a module parsing result file")
 @click.option("--ignore", help="ignore specific paths, comma separated")
 @click.argument("path", type=click.Path(path_type=Path))
 @click.argument("output", type=click.Path(path_type=Path))
-def parse(path: Path, output: Path, *, ignore: Optional[str] = None) -> None:
+def generate(path: Path, output: Path, *, ignore: Optional[str] = None) -> None:
     parser = SourceParser(ignore=ignore)
     result = parser.parse_files_from_path(path)
 
@@ -37,7 +47,7 @@ def parse(path: Path, output: Path, *, ignore: Optional[str] = None) -> None:
     writer.write(result, serializer)
 
 
-@click.command(help="report parse results in console (stdout)")
+@click.command(help="report a module parsing result file in console (stdout)")
 @click.option("--ignore", help="ignore specific modules")
 @click.option("--filter", help="filter specific modules")
 @click.option("--max-depth", help="max module depth", type=click.INT)
@@ -54,7 +64,7 @@ def report_console(
     report.render(result)
 
 
-@click.command(help="report parse results in DOT format")
+@click.command(help="report a module parsing result file in DOT format")
 @click.option("--ignore", help="ignore specific modules")
 @click.option("--filter", help="filter specific modules")
 @click.option("--max-depth", help="max module depth", type=click.INT)
@@ -73,7 +83,7 @@ def report_dot(
     report.render(result)
 
 
-@click.command(help="report parse results in PlantUML format")
+@click.command(help="report a module parsing result file in PlantUML format")
 @click.option("--ignore", help="ignore specific modules")
 @click.option("--filter", help="filter specific modules")
 @click.option("--max-depth", help="max module depth", type=click.INT)
@@ -111,7 +121,7 @@ def _load_report(
     return configurable_filter.apply_filter(reader.read(serializer))
 
 
-run.add_command(parse)
+run.add_command(generate)
 run.add_command(report_console)
 run.add_command(report_dot)
 run.add_command(report_plantuml)

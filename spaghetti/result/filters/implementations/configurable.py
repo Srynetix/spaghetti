@@ -30,7 +30,7 @@ class ConfigurableResultFilter(ParseResultFilter):
     def apply_filter(self, result: ParseResult) -> ParseResult:
         module_imports: Dict[Module, Set[Module]] = {}
 
-        for module in sorted(self._get_filtered_modules(set(result.module_imports.keys()))):
+        for module in sorted(self._get_filtered_modules(result)):
             module_at_depth = self._get_module_at_depth(module)
             if self._is_module_excluded(module_at_depth):
                 continue
@@ -56,8 +56,20 @@ class ConfigurableResultFilter(ParseResultFilter):
 
         return ParseResult(module_imports=module_imports)
 
-    def _get_filtered_modules(self, modules: Set[Module]) -> Set[Module]:
-        return {module for module in modules if self._is_module_filtered(module)}
+    def _get_filtered_modules(self, result: ParseResult) -> Set[Module]:
+        filtered_modules = set()
+
+        for module, links in result.module_imports.items():
+            skip_module = True
+            for link in links:
+                if self._is_module_filtered(link):
+                    skip_module = False
+                    break
+            if skip_module and not self._is_module_filtered(module):
+                continue
+            filtered_modules.add(module)
+
+        return filtered_modules
 
     def _get_module_at_depth(self, module: Module) -> Module:
         if self.max_depth:

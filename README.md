@@ -154,12 +154,24 @@ spaghetti.result (dependencies: 1, reverse dependencies: 1):
 It can be useful to focus on specific modules.
 
 ```
-spaghetti.parser.source_parser (dependencies: 5, reverse dependencies: 0):
+spaghetti.cmd (dependencies: 8, reverse dependencies: 0):
+  - spaghetti.models.parse_result
+  - spaghetti.parser.source_parser
+  - spaghetti.report.implementations.console_report
+  - spaghetti.report.implementations.graph_report
+  - spaghetti.report.implementations.plantuml_report
+  - spaghetti.result.filters.implementations.configurable
+  - spaghetti.result.io.implementations.file
+  - spaghetti.result.serializers.implementations.json_serializer
+spaghetti.parser.source_parser (dependencies: 5, reverse dependencies: 2):
   - spaghetti.models.module
   - spaghetti.models.parse_result
   - spaghetti.parser.import_declaration
   - spaghetti.parser.import_node_visitor
   - spaghetti.parser.module_resolver
+tests.parser.test_source_parser (dependencies: 2, reverse dependencies: 0):
+  - spaghetti.models.module
+  - spaghetti.parser.source_parser
 ```
 
 Make sure to try these using other "report" commands!

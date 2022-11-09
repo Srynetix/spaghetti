@@ -23,7 +23,7 @@ class Module:
     def parent(self) -> Optional[Self]:
         parts = self.parts()
         if len(parts) > 1:
-            return type(self)(name=parts[-2])
+            return type(self)(name=".".join(parts[:-1]))
         return None
 
     def parts(self) -> List[str]:

@@ -11,9 +11,13 @@ class ImportNodeVisitor(ast.NodeVisitor):
         self.declarations = set()
 
     def visit_Import(self, node: ast.Import) -> Any:
-        declaration = ImportDeclaration(source=None, modules=frozenset(name.name for name in node.names))
+        declaration = ImportDeclaration(
+            source=None, modules=frozenset(name.name for name in node.names)
+        )
         self.declarations.add(declaration)
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> Any:
-        declaration = ImportDeclaration(source=node.module, modules=frozenset(name.name for name in node.names))
+        declaration = ImportDeclaration(
+            source=node.module, modules=frozenset(name.name for name in node.names)
+        )
         self.declarations.add(declaration)

@@ -21,7 +21,7 @@ from .result.serializers.implementations.json_serializer import (
 
 @click.group()
 def run():
-    pass
+    """Main entry-point."""
 
 
 @click.command(help="parse module links from a folder")
@@ -30,7 +30,7 @@ def run():
 @click.argument("output", type=click.Path(path_type=Path))
 def parse(path: Path, output: Path, *, ignore: Optional[str] = None) -> None:
     parser = SourceParser(ignore=ignore)
-    result = parser.scan_folder_recursive(path)
+    result = parser.parse_files_from_path(path)
 
     serializer = ParseResultJsonSerializer()
     writer = ParseResultFileWriter(output)
@@ -43,7 +43,11 @@ def parse(path: Path, output: Path, *, ignore: Optional[str] = None) -> None:
 @click.option("--max-depth", help="max module depth", type=click.INT)
 @click.argument("results_path", type=click.Path(path_type=Path))
 def report_console(
-    results_path: Path, *, max_depth: Optional[int] = None, ignore: Optional[str] = None, filter: Optional[str] = None
+    results_path: Path,
+    *,
+    max_depth: Optional[int] = None,
+    ignore: Optional[str] = None,
+    filter: Optional[str] = None,
 ) -> None:
     result = _load_report(results_path, max_depth=max_depth, ignore=ignore, filter=filter)
     report = ConsoleReport()

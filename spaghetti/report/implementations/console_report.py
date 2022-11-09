@@ -6,9 +6,9 @@ from spaghetti.report.interface import Report
 
 class ConsoleReport(Report):
     def render(self, result: ParseResult) -> None:
-        modules = sorted(result.import_links.keys())
+        modules = sorted(result.module_imports.keys())
         for module in modules:
-            sorted_deps = sorted(result.import_links[module])
+            sorted_deps = sorted(result.module_imports[module])
             dependency_count = result.get_module_dependency_count(module)
             reverse_dependency_count = result.get_module_reverse_dependency_count(module)
             rich_print(

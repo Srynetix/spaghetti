@@ -13,9 +13,9 @@ class GraphReport(Report):
     def render(self, result: ParseResult) -> None:
         code = "digraph G {\n"
 
-        modules = sorted(result.import_links.keys())
+        modules = sorted(result.module_imports.keys())
         for module in modules:
-            sorted_deps = sorted(result.import_links[module])
+            sorted_deps = sorted(result.module_imports[module])
             for dep in sorted_deps:
                 code += f'"{module.name}" -> "{dep.name}"\n'
 

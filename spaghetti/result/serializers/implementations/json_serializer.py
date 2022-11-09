@@ -1,4 +1,5 @@
 import json
+from collections import OrderedDict
 
 from spaghetti.models.module import Module
 from spaghetti.models.parse_result import ParseResult
@@ -7,16 +8,17 @@ from spaghetti.result.serializers.interface import ParseResultSerializer
 
 class ParseResultJsonSerializer(ParseResultSerializer):
     def serialize(self, result: ParseResult) -> bytes:
-        json_results = {}
-        for module, links in result.import_links.items():
-            json_results[module.name] = [link.name for link in links]
+        json_results = OrderedDict()
+        modules = sorted(result.module_imports.keys())
+        for module in modules:
+            links = sorted(link.name for link in result.module_imports[module])
+            json_results[module.name] = links
         return json.dumps(json_results).encode("utf-8")
 
     def deserialize(self, data: bytes) -> ParseResult:
         json_data = json.loads(data)
-        source_modules = set(Module(d) for d in json_data.keys())
-        import_links = {}
+        module_imports = {}
         for source in json_data.keys():
             links = set(Module(d) for d in json_data[source])
-            import_links[Module(source)] = links
-        return ParseResult(source_modules=source_modules, import_links=import_links)
+            module_imports[Module(source)] = links
+        return ParseResult(module_imports=module_imports)

@@ -25,7 +25,7 @@ class ParseResult:
         return self.module_imports == other.module_imports
 
     def __str__(self) -> str:
-        return f"ParseResult(module_imports={self.module_imports})"
+        return str(self.module_imports)
 
     def __repr__(self) -> str:
         return str(self)

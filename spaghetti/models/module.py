@@ -1,5 +1,4 @@
 import functools
-from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
@@ -7,9 +6,11 @@ from typing_extensions import Self
 
 
 @functools.total_ordering
-@dataclass
 class Module:
     name: str
+
+    def __init__(self, name: str) -> None:
+        self.name = name
 
     @classmethod
     def from_path(cls, root: Path, path: Path) -> Self:
@@ -42,3 +43,9 @@ class Module:
 
     def __lt__(self, other: Self) -> bool:
         return self.name < other.name
+
+    def __str__(self) -> str:
+        return str(self.name)
+
+    def __repr__(self) -> str:
+        return str(self)

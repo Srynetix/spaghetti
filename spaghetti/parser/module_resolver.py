@@ -11,7 +11,7 @@ class ModuleResolver:
     known_modules: Set[Module]
 
     def __init__(self, known_modules: Set[Module]) -> None:
-        self.logger = get_logger("SourceParser")
+        self.logger = get_logger("ModuleResolver")
         self.known_modules = known_modules
 
     def convert_import_declarations_to_modules(

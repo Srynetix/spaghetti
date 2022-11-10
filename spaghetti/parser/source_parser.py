@@ -1,7 +1,7 @@
 import ast
 import os
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, Set
 
 from structlog import get_logger
 
@@ -14,17 +14,11 @@ from .import_node_visitor import ImportNodeVisitor
 
 
 class SourceParser:
-    ignore: List[str]
     known_local_modules: Set[Module]
 
-    def __init__(self, *, ignore: Optional[str] = None):
+    def __init__(self):
         self.logger = get_logger("SourceParser")
         self.known_local_modules = set()
-
-        if ignore:
-            self.ignore = ignore.split(",")
-        else:
-            self.ignore = []
 
     def parse_files_from_path(self, root_path: Path) -> ParseResult:
         source_file_paths = self._scan_files_in_folder_recursive(root_path)

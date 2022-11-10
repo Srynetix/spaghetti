@@ -5,9 +5,9 @@ class ImportDeclaration:
     source: Optional[str]
     modules: FrozenSet[str]
 
-    def __init__(self, *, source: Optional[str], modules: Optional[FrozenSet[str]]) -> None:
+    def __init__(self, *, source: Optional[str], modules: FrozenSet[str]) -> None:
         self.source = source
-        self.modules = modules or frozenset()
+        self.modules = modules
 
     def __hash__(self) -> int:
         return hash((self.source, self.modules))

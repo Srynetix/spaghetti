@@ -31,21 +31,26 @@ This will generate a module dependency result file that you can exploit using on
 
 ### Show a console report of a result file
 
-    spaghetti report result.json
+    spaghetti report-console result.json
 
 When executing this command on the spaghetti repository, here's the result:
 
 ```
-spaghetti.cmd (dependencies: 8, reverse dependencies: 0):
+spaghetti.cmd (dependencies: 13, reverse dependencies: 0):
   - spaghetti.models.parse_result
   - spaghetti.parser.source_parser
   - spaghetti.report.implementations.console_report
   - spaghetti.report.implementations.graph_report
   - spaghetti.report.implementations.plantuml_report
-  - spaghetti.result.filters.implementations.configurable
+  - spaghetti.result.filters.chain
+  - spaghetti.result.filters.implementations.exclude_patterns
+  - spaghetti.result.filters.implementations.filter_patterns
+  - spaghetti.result.filters.implementations.hide_modules_without_links
+  - spaghetti.result.filters.implementations.limit_max_depth
+  - spaghetti.result.filters.implementations.strip_non_local_modules
   - spaghetti.result.io.implementations.file
   - spaghetti.result.serializers.implementations.json_serializer
-spaghetti.models.parse_result (dependencies: 1, reverse dependencies: 19):
+spaghetti.models.parse_result (dependencies: 1, reverse dependencies: 29):
   - spaghetti.models.module
 spaghetti.parser.import_node_visitor (dependencies: 1, reverse dependencies: 1):
   - spaghetti.parser.import_declaration
@@ -69,11 +74,29 @@ spaghetti.report.implementations.plantuml_report (dependencies: 2, reverse depen
   - spaghetti.report.interface
 spaghetti.report.interface (dependencies: 1, reverse dependencies: 3):
   - spaghetti.models.parse_result
-spaghetti.result.filters.implementations.configurable (dependencies: 3, reverse dependencies: 2):
+spaghetti.result.filters.chain (dependencies: 2, reverse dependencies: 2):
+  - spaghetti.models.parse_result
+  - spaghetti.result.filters.interface
+spaghetti.result.filters.implementations.exclude_patterns (dependencies: 3, reverse dependencies: 2):
   - spaghetti.models.module
   - spaghetti.models.parse_result
   - spaghetti.result.filters.interface
-spaghetti.result.filters.interface (dependencies: 1, reverse dependencies: 1):
+spaghetti.result.filters.implementations.filter_patterns (dependencies: 3, reverse dependencies: 3):
+  - spaghetti.models.module
+  - spaghetti.models.parse_result
+  - spaghetti.result.filters.interface
+spaghetti.result.filters.implementations.hide_modules_without_links (dependencies: 2, reverse dependencies: 2):
+  - spaghetti.models.parse_result
+  - spaghetti.result.filters.interface
+spaghetti.result.filters.implementations.limit_max_depth (dependencies: 3, reverse dependencies: 2):
+  - spaghetti.models.module
+  - spaghetti.models.parse_result
+  - spaghetti.result.filters.interface
+spaghetti.result.filters.implementations.strip_non_local_modules (dependencies: 3, reverse dependencies: 2):
+  - spaghetti.models.module
+  - spaghetti.models.parse_result
+  - spaghetti.result.filters.interface
+spaghetti.result.filters.interface (dependencies: 1, reverse dependencies: 6):
   - spaghetti.models.parse_result
 spaghetti.result.io.implementations.file (dependencies: 4, reverse dependencies: 2):
   - spaghetti.models.parse_result
@@ -101,6 +124,8 @@ tests.models.test_module (dependencies: 1, reverse dependencies: 0):
 tests.models.test_parse_result (dependencies: 2, reverse dependencies: 0):
   - spaghetti.models.module
   - spaghetti.models.parse_result
+tests.parser.test_import_declaration (dependencies: 1, reverse dependencies: 0):
+  - spaghetti.parser.import_declaration
 tests.parser.test_module_resolver (dependencies: 3, reverse dependencies: 0):
   - spaghetti.models.module
   - spaghetti.parser.import_declaration
@@ -113,10 +138,30 @@ tests.report.test_reports (dependencies: 4, reverse dependencies: 0):
   - spaghetti.report.implementations.console_report
   - spaghetti.report.implementations.graph_report
   - spaghetti.report.implementations.plantuml_report
-tests.result.test_filters (dependencies: 3, reverse dependencies: 0):
+tests.result.filters.test_chain (dependencies: 3, reverse dependencies: 0):
+  - spaghetti.models.parse_result
+  - spaghetti.result.filters.chain
+  - spaghetti.result.filters.implementations.filter_patterns
+tests.result.filters.test_exclude_patterns (dependencies: 3, reverse dependencies: 0):
   - spaghetti.models.module
   - spaghetti.models.parse_result
-  - spaghetti.result.filters.implementations.configurable
+  - spaghetti.result.filters.implementations.exclude_patterns
+tests.result.filters.test_filter_patterns (dependencies: 3, reverse dependencies: 0):
+  - spaghetti.models.module
+  - spaghetti.models.parse_result
+  - spaghetti.result.filters.implementations.filter_patterns
+tests.result.filters.test_hide_modules_without_links (dependencies: 3, reverse dependencies: 0):
+  - spaghetti.models.module
+  - spaghetti.models.parse_result
+  - spaghetti.result.filters.implementations.hide_modules_without_links
+tests.result.filters.test_limit_max_depth (dependencies: 3, reverse dependencies: 0):
+  - spaghetti.models.module
+  - spaghetti.models.parse_result
+  - spaghetti.result.filters.implementations.limit_max_depth
+tests.result.filters.test_strip_non_local_modules (dependencies: 3, reverse dependencies: 0):
+  - spaghetti.models.module
+  - spaghetti.models.parse_result
+  - spaghetti.result.filters.implementations.strip_non_local_modules
 tests.result.test_io (dependencies: 3, reverse dependencies: 0):
   - spaghetti.models.parse_result
   - spaghetti.result.io.implementations.file
@@ -128,7 +173,7 @@ tests.result.test_serializers (dependencies: 2, reverse dependencies: 0):
 
 ### Show a console report of a result file, limiting the module depth to 2, excluding tests
 
-    spaghetti report-console results.json --max-depth 2 --exclude tests
+    spaghetti report-console results.json --max-depth 2 --ignore tests
 
 You can pass options to the report commands (they should be the same for each report command).
 Here's the result:
@@ -154,23 +199,15 @@ spaghetti.result (dependencies: 1, reverse dependencies: 1):
 It can be useful to focus on specific modules.
 
 ```
-spaghetti.cmd (dependencies: 8, reverse dependencies: 0):
-  - spaghetti.models.parse_result
+paghetti.cmd (dependencies: 1, reverse dependencies: 0):
   - spaghetti.parser.source_parser
-  - spaghetti.report.implementations.console_report
-  - spaghetti.report.implementations.graph_report
-  - spaghetti.report.implementations.plantuml_report
-  - spaghetti.result.filters.implementations.configurable
-  - spaghetti.result.io.implementations.file
-  - spaghetti.result.serializers.implementations.json_serializer
 spaghetti.parser.source_parser (dependencies: 5, reverse dependencies: 2):
   - spaghetti.models.module
   - spaghetti.models.parse_result
   - spaghetti.parser.import_declaration
   - spaghetti.parser.import_node_visitor
   - spaghetti.parser.module_resolver
-tests.parser.test_source_parser (dependencies: 2, reverse dependencies: 0):
-  - spaghetti.models.module
+tests.parser.test_source_parser (dependencies: 1, reverse dependencies: 0):
   - spaghetti.parser.source_parser
 ```
 

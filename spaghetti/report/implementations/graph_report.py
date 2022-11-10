@@ -21,5 +21,8 @@ class GraphReport(Report):
 
         code += "}"
 
-        with open(self.output_path, mode="w", encoding="utf-8") as hndl:
-            hndl.write(code)
+        if self.output_path == "-":
+            print(code)
+        else:
+            with open(self.output_path, mode="w", encoding="utf-8") as hndl:
+                hndl.write(code)

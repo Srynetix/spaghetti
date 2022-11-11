@@ -1,5 +1,7 @@
 # spaghetti
 
+[![Coverage Status](https://coveralls.io/repos/github/Srynetix/spaghetti/badge.svg?branch=main)](https://coveralls.io/github/Srynetix/spaghetti?branch=main)
+
 Trace your Python module dependencies to have a better picture before cleaning!
 
 ## Requirements

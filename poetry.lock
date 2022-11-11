@@ -415,6 +415,20 @@ pytest = ">=4.6"
 testing = ["fields", "hunter", "process-tests", "six", "pytest-xdist", "virtualenv"]
 
 [[package]]
+name = "pytest-mock"
+version = "3.10.0"
+description = "Thin-wrapper around the mock package for easier use with pytest"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+pytest = ">=5.0"
+
+[package.extras]
+dev = ["pre-commit", "tox", "pytest-asyncio"]
+
+[[package]]
 name = "pyyaml"
 version = "6.0"
 description = "YAML parser and emitter for Python"
@@ -509,7 +523,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "f53563e0775906b855c4619b24e0c417b3a53ad1c877186e2ce8306715e9e039"
+content-hash = "a362180dc495efdcd0ec05d8471e3bccdced3b141c91e22694e12464e018e890"
 
 [metadata.files]
 attrs = []
@@ -546,6 +560,7 @@ pygments = []
 pyparsing = []
 pytest = []
 pytest-cov = []
+pytest-mock = []
 pyyaml = []
 rich = []
 smmap = []

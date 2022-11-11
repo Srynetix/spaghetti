@@ -27,6 +27,10 @@ class TestGraphReport:
 }"""
         )
 
+    def test_report_stdout(self, sample_parse_result: ParseResult) -> None:
+        report = GraphReport(Path("-"))
+        report.render(sample_parse_result)
+
 
 class TestPlantUMLReport:
     def test_report(self, sample_parse_result: ParseResult, tmpdir: Any) -> None:
@@ -40,5 +44,10 @@ class TestPlantUMLReport:
 [module.a] --> [module.b]
 [module.a] --> [sys]
 [module.c] --> [module.b]
+
 @enduml"""
         )
+
+    def test_report_stdout(self, sample_parse_result: ParseResult) -> None:
+        report = PlantUMLReport(Path("-"))
+        report.render(sample_parse_result)

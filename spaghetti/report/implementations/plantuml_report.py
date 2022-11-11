@@ -18,8 +18,12 @@ class PlantUMLReport(Report):
             sorted_deps = sorted(result.module_imports[module])
             for dep in sorted_deps:
                 code += f"[{module.name}] --> [{dep.name}]\n"
-
+        else:
+            code += "\n"
         code += "@enduml"
 
-        with open(self.output_path, mode="w", encoding="utf-8") as hndl:
-            hndl.write(code)
+        if self.output_path == Path("-"):
+            print(code)
+        else:
+            with open(self.output_path, mode="w", encoding="utf-8") as hndl:
+                hndl.write(code)

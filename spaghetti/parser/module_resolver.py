@@ -35,10 +35,7 @@ class ModuleResolver:
         else:
             # It can be multiple imports
             for module in declaration.modules:
-                decl_module = self._resolve_module(source_module, module)
-                if decl_module == source_module:
-                    continue
-                modules.add(decl_module)
+                modules.add(self._resolve_module(source_module, module))
         return modules
 
     def _convert_single_import_declaration_to_modules(

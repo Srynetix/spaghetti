@@ -25,6 +25,7 @@ pytest-cov = "^4.0.0"
 flake8-bandit = "3.0.0"
 flake8-bugbear = "^22.10.27"
 mypy = "^0.990"
+pytest-mock = "^3.10.0"
 
 [tool.poetry.scripts]
 spaghetti = "spaghetti.cmd:run"

@@ -24,3 +24,9 @@ class TestParseResult:
         assert arrange.get_module_reverse_dependency_count(Module("module.a")) == 0
         assert arrange.get_module_reverse_dependency_count(Module("module.b")) == 2
         assert arrange.get_module_reverse_dependency_count(Module("module.c")) == 0
+
+    def test_str(self, arrange: ParseResult) -> None:
+        assert str(arrange) != ""
+
+    def test_repr(self, arrange: ParseResult) -> None:
+        assert repr(arrange) != ""

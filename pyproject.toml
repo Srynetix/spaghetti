@@ -22,6 +22,8 @@ pytest = "^7.2.0"
 duct = "^0.6.4"
 coverage = {extras = ["toml"], version = "^6.5.0"}
 pytest-cov = "^4.0.0"
+flake8-bandit = "3.0.0"
+flake8-bugbear = "^22.10.27"
 
 [tool.poetry.scripts]
 spaghetti = "spaghetti.cmd:run"
@@ -35,17 +37,21 @@ include = '\.pyi?$'
 profile = "black"
 
 [tool.flakeheaven]
-base = "https://raw.githubusercontent.com/flakeheaven/flakeheaven/main/pyproject.toml"
 format = "grouped"
 max_line_length = 100
 show_source = true
 
 [tool.flakeheaven.plugins]
+flake8-bandit = ["+*"]
+flake8-bugbear = ["+*"]
 flake8-isort = ["+*"]
-pycodestyle = ["-W503"]
+pyflakes = ["+*"]
+pycodestyle = ["+*", "-W503"]
+
+[tool.flakeheaven.exceptions."tests/"]
+flake8-bandit = ["-S101"]
 
 [tool.coverage]
-
 [tool.coverage.report]
 omit = [
     "makefile.py"

@@ -7,7 +7,7 @@ from .import_declaration import ImportDeclaration
 class ImportNodeVisitor(ast.NodeVisitor):
     declarations: Set[ImportDeclaration]
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.declarations = set()
 
     def visit_Import(self, node: ast.Import) -> Any:

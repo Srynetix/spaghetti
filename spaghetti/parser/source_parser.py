@@ -16,7 +16,7 @@ from .import_node_visitor import ImportNodeVisitor
 class SourceParser:
     known_local_modules: Set[Module]
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.logger = get_logger("SourceParser")
         self.known_local_modules = set()
 

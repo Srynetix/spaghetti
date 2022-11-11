@@ -1,7 +1,7 @@
 import functools
 import logging
 from pathlib import Path
-from typing import Optional, Set
+from typing import Any, Callable, List, Optional, Set
 
 import click
 import structlog
@@ -9,6 +9,7 @@ import structlog
 from spaghetti.models.module import Module
 from spaghetti.models.parse_result import ParseResult
 from spaghetti.report.implementations.plantuml_report import PlantUMLReport
+from spaghetti.result.filters.interface import ParseResultFilter
 from spaghetti.result.io.implementations.file import (
     ParseResultFileReader,
     ParseResultFileWriter,
@@ -37,13 +38,13 @@ structlog.configure(
 )
 
 
-def setup_filter_arguments(fn):
+def setup_filter_arguments(fn: Callable[..., Any]) -> Callable[..., Any]:
     @click.option("--ignore", help="ignore specific modules (comma separated strings)")
     @click.option("--filter", help="filter specific modules (comma separated strings)")
     @click.option("--max-depth", help="max module depth", type=click.INT)
     @click.argument("results_path", type=click.Path(path_type=Path))
     @functools.wraps(fn)
-    def inner(*args, **kwargs):
+    def inner(*args: Any, **kwargs: Any) -> Any:
         return fn(*args, **kwargs)
 
     return inner
@@ -51,7 +52,7 @@ def setup_filter_arguments(fn):
 
 @click.group(invoke_without_command=True, no_args_is_help=True)
 @click.version_option()
-def run():
+def run() -> None:
     """
     trace your Python module dependencies to have a better picture before cleaning!
     """
@@ -166,7 +167,7 @@ def _build_filter_chain(
     excluded_patterns: Set[str],
     filtered_patterns: Set[str],
 ) -> ResultFilterChain:
-    filters = []
+    filters: List[ParseResultFilter] = []
 
     if max_depth:
         filters.append(LimitMaxDepthResultFilter(max_depth))

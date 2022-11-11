@@ -1,48 +1,49 @@
 import sys
 
 import click
-from duct import cmd
+from duct import Expression, cmd
 
 
 @click.group()
-def run():
+def run() -> None:
     """Makefile entry-point."""
 
 
-def _run_and_die_if_error(cmd):
+def _run_and_die_if_error(cmd: Expression) -> None:
     output = cmd.unchecked().run().status
     if output != 0:
         sys.exit(output)
 
 
 @click.command(help="format code")
-def fmt():
+def fmt() -> None:
     cmd("isort", ".").run()
     cmd("black", ".").run()
 
 
 @click.command(help="lint code")
-def lint():
+def lint() -> None:
     _run_lint()
 
 
 @click.command(help="test code")
-def test():
+def test() -> None:
     _run_tests()
 
 
 @click.command(help="run CI checks")
-def ci():
+def ci() -> None:
     _run_lint()
     _run_tests()
 
 
-def _run_lint():
+def _run_lint() -> None:
     _run_and_die_if_error(cmd("black", "--check", "."))
     _run_and_die_if_error(cmd("flakeheaven", "lint"))
+    _run_and_die_if_error(cmd("mypy", "--strict", "."))
 
 
-def _run_tests():
+def _run_tests() -> None:
     _run_and_die_if_error(cmd("pytest", "-vv", "tests", "--cov=."))
 
 

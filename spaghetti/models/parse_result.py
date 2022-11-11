@@ -1,7 +1,5 @@
 from typing import Dict, Set
 
-from typing_extensions import Self
-
 from spaghetti.models.module import Module
 
 
@@ -21,8 +19,8 @@ class ParseResult:
                 count += 1
         return count
 
-    def __eq__(self, other: Self) -> bool:
-        return self.module_imports == other.module_imports
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, type(self)) and self.module_imports == other.module_imports
 
     def __str__(self) -> str:
         return str(self.module_imports)

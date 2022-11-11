@@ -7,7 +7,7 @@ FIXTURES_DIR = Path(__file__).parent.parent / "fixtures"
 
 
 class TestSourceParser:
-    def test_parse_files(self):
+    def test_parse_files(self) -> None:
         parser = SourceParser()
         result = parser.parse_files_from_path(FIXTURES_DIR)
         assert result.module_imports == {

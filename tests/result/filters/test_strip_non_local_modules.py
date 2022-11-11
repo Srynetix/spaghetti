@@ -6,7 +6,7 @@ from spaghetti.result.filters.implementations.strip_non_local_modules import (
 
 
 class TestStripNonLocalModulesResultFilter:
-    def test_filter(self, sample_parse_result: ParseResult):
+    def test_filter(self, sample_parse_result: ParseResult) -> None:
         filt = StripNonLocalModulesResultFilter(
             local_modules={Module("module.a"), Module("module.b"), Module("module.c")}
         )

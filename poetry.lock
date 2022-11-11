@@ -264,6 +264,25 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "mypy"
+version = "0.990"
+description = "Optional static typing for Python"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+mypy-extensions = ">=0.4.3"
+tomli = {version = ">=1.1.0", markers = "python_version < \"3.11\""}
+typing-extensions = ">=3.10"
+
+[package.extras]
+dmypy = ["psutil (>=4.0)"]
+install-types = ["pip"]
+python2 = ["typed-ast (>=1.4.0,<2)"]
+reports = ["lxml"]
+
+[[package]]
 name = "mypy-extensions"
 version = "0.4.3"
 description = "Experimental type system extensions for programs checked with the mypy typechecker."
@@ -396,6 +415,20 @@ pytest = ">=4.6"
 testing = ["fields", "hunter", "process-tests", "six", "pytest-xdist", "virtualenv"]
 
 [[package]]
+name = "pytest-mock"
+version = "3.10.0"
+description = "Thin-wrapper around the mock package for easier use with pytest"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+pytest = ">=5.0"
+
+[package.extras]
+dev = ["pre-commit", "tox", "pytest-asyncio"]
+
+[[package]]
 name = "pyyaml"
 version = "6.0"
 description = "YAML parser and emitter for Python"
@@ -490,7 +523,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "9c554b82c610a0f5a53d948a24ff5e45182d0855a7bbc7e96e9fc01e8cefee23"
+content-hash = "a362180dc495efdcd0ec05d8471e3bccdced3b141c91e22694e12464e018e890"
 
 [metadata.files]
 attrs = []
@@ -514,6 +547,7 @@ gitpython = []
 iniconfig = []
 isort = []
 mccabe = []
+mypy = []
 mypy-extensions = []
 packaging = []
 pathspec = []
@@ -526,6 +560,7 @@ pygments = []
 pyparsing = []
 pytest = []
 pytest-cov = []
+pytest-mock = []
 pyyaml = []
 rich = []
 smmap = []

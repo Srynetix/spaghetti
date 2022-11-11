@@ -5,14 +5,14 @@ from spaghetti.result.serializers.implementations.json_serializer import (
 
 
 class TestJsonSerializer:
-    def test_serialize(self, sample_parse_result: ParseResult):
+    def test_serialize(self, sample_parse_result: ParseResult) -> None:
         serializer = ParseResultJsonSerializer()
         assert (
             serializer.serialize(sample_parse_result)
             == b'{"module.a": ["module.b", "sys"], "module.b": [], "module.c": ["module.b"]}'
         )
 
-    def test_deserialize(self, sample_parse_result: ParseResult):
+    def test_deserialize(self, sample_parse_result: ParseResult) -> None:
         serializer = ParseResultJsonSerializer()
         assert (
             serializer.deserialize(

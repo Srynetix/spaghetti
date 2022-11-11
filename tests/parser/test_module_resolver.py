@@ -4,7 +4,7 @@ from spaghetti.parser.module_resolver import ModuleResolver
 
 
 class TestModuleResolver:
-    def test_convert_import_declaration(self):
+    def test_convert_import_declaration(self) -> None:
         known_local_modules = {
             Module("module"),
             Module("module.a"),

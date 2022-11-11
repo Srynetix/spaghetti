@@ -63,7 +63,7 @@ class FilterPatternsResultFilter(ParseResultFilter):
 
         return self._module_match_patterns(module, self.filtered_patterns)
 
-    def _module_match_patterns(self, module: Module, patterns: Set[str]):
+    def _module_match_patterns(self, module: Module, patterns: Set[str]) -> bool:
         for pattern in patterns:
             if module.name.startswith(pattern):
                 return True

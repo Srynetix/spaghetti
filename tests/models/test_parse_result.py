@@ -15,12 +15,12 @@ class TestParseResult:
             },
         )
 
-    def test_get_module_dependency_count(self, arrange: ParseResult):
+    def test_get_module_dependency_count(self, arrange: ParseResult) -> None:
         assert arrange.get_module_dependency_count(Module("module.a")) == 1
         assert arrange.get_module_dependency_count(Module("module.b")) == 0
         assert arrange.get_module_dependency_count(Module("module.c")) == 1
 
-    def test_get_module_reverse_dependency_count(self, arrange: ParseResult):
+    def test_get_module_reverse_dependency_count(self, arrange: ParseResult) -> None:
         assert arrange.get_module_reverse_dependency_count(Module("module.a")) == 0
         assert arrange.get_module_reverse_dependency_count(Module("module.b")) == 2
         assert arrange.get_module_reverse_dependency_count(Module("module.c")) == 0

@@ -6,7 +6,7 @@ from spaghetti.result.filters.implementations.hide_modules_without_links import 
 
 
 class TestHideModulesWithoutLinksResultFilter:
-    def test_filter(self, sample_parse_result: ParseResult):
+    def test_filter(self, sample_parse_result: ParseResult) -> None:
         filt = HideModulesWithoutLinksResultFilter()
         assert filt.apply_filter(sample_parse_result) == ParseResult(
             module_imports={

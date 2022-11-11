@@ -40,7 +40,7 @@ class ExcludePatternsResultFilter(ParseResultFilter):
     def _is_module_excluded(self, module: Module) -> bool:
         return self._module_match_patterns(module, self.excluded_patterns)
 
-    def _module_match_patterns(self, module: Module, patterns: Set[str]):
+    def _module_match_patterns(self, module: Module, patterns: Set[str]) -> bool:
         for pattern in patterns:
             if module.name.startswith(pattern):
                 return True

@@ -1,4 +1,4 @@
-# spaghetti
+# spaghetti :spaghetti:
 
 [![Coverage Status](https://coveralls.io/repos/github/Srynetix/spaghetti/badge.svg?branch=main)](https://coveralls.io/github/Srynetix/spaghetti?branch=main)
 

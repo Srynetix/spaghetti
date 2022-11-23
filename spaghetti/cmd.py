@@ -1,47 +1,29 @@
 import functools
-import logging
 from pathlib import Path
-from typing import Any, Callable, List, Optional, Set
+from typing import Any, Callable, Optional
 
 import click
-import structlog
 
-from spaghetti.models.module import Module
-from spaghetti.models.parse_result import ParseResult
-from spaghetti.report.implementations.plantuml_report import PlantUMLReport
-from spaghetti.result.filters.interface import ParseResultFilter
-from spaghetti.result.io.implementations.file import (
-    ParseResultFileReader,
-    ParseResultFileWriter,
+from spaghetti.io.implementations.file import (
+    ProjectDependenciesFileReader,
+    ProjectDependenciesFileWriter,
 )
+from spaghetti.models.project_dependencies import ProjectDependencies
+from spaghetti.reporting.implementations.plantuml_report import PlantUMLReport
 
-from .parser.source_parser import SourceParser
-from .report.implementations.console_report import ConsoleReport
-from .report.implementations.graph_report import GraphReport
-from .result.filters.chain import ResultFilterChain
-from .result.filters.implementations.exclude_patterns import ExcludePatternsResultFilter
-from .result.filters.implementations.filter_patterns import FilterPatternsResultFilter
-from .result.filters.implementations.hide_modules_without_links import (
-    HideModulesWithoutLinksResultFilter,
-)
-from .result.filters.implementations.limit_max_depth import LimitMaxDepthResultFilter
-from .result.filters.implementations.strip_non_local_modules import (
-    StripNonLocalModulesResultFilter,
-)
-from .result.serializers.implementations.json_serializer import (
-    ParseResultJsonSerializer,
-)
-
-# Only shows INFO+ messages
-structlog.configure(
-    wrapper_class=structlog.make_filtering_bound_logger(logging.INFO),
+from .filtering.implementations.configurable import ConfigurableFilter
+from .parsing.source_parser import SourceParser
+from .reporting.implementations.console_report import ConsoleReport
+from .reporting.implementations.graph_report import GraphReport
+from .serialization.implementations.json_serializer import (
+    ProjectDependenciesJsonSerializer,
 )
 
 
 def setup_filter_arguments(fn: Callable[..., Any]) -> Callable[..., Any]:
     @click.option("--ignore", help="ignore specific modules (comma separated strings)")
     @click.option("--filter", help="filter specific modules (comma separated strings)")
-    @click.option("--max-depth", help="max module depth", type=click.INT)
+    @click.option("--max-depth", help="max module depth", type=click.INT, default=0)
     @click.argument("results_path", type=click.Path(path_type=Path))
     @functools.wraps(fn)
     def inner(*args: Any, **kwargs: Any) -> Any:
@@ -68,8 +50,8 @@ def generate(path: Path, output: Path) -> None:
     parser = SourceParser()
     result = parser.parse_files_from_path(path)
 
-    serializer = ParseResultJsonSerializer()
-    writer = ParseResultFileWriter(output)
+    serializer = ProjectDependenciesJsonSerializer()
+    writer = ProjectDependenciesFileWriter(output)
     writer.write(result, serializer)
 
 
@@ -78,7 +60,7 @@ def generate(path: Path, output: Path) -> None:
 def report_console(
     results_path: Path,
     *,
-    max_depth: Optional[int] = None,
+    max_depth: int = 0,
     ignore: Optional[str] = None,
     filter: Optional[str] = None,
 ) -> None:
@@ -99,7 +81,7 @@ def report_dot(
     results_path: Path,
     output_path: Path,
     *,
-    max_depth: Optional[int] = None,
+    max_depth: int = 0,
     ignore: Optional[str] = None,
     filter: Optional[str] = None,
 ) -> None:
@@ -122,7 +104,7 @@ def report_plantuml(
     results_path: Path,
     output_path: Path,
     *,
-    max_depth: Optional[int] = None,
+    max_depth: int = 0,
     ignore: Optional[str] = None,
     filter: Optional[str] = None,
 ) -> None:
@@ -144,46 +126,21 @@ def _load_report(
     max_depth: Optional[int],
     excluded_patterns: Optional[str],
     filtered_patterns: Optional[str],
-) -> ParseResult:
+) -> ProjectDependencies:
     excluded_patterns_set = {p for p in (excluded_patterns or "").split(",") if p}
     filtered_patterns_set = {p for p in (filtered_patterns or "").split(",") if p}
 
-    serializer = ParseResultJsonSerializer()
-    reader = ParseResultFileReader(results_path)
-    result = reader.read(serializer)
+    serializer = ProjectDependenciesJsonSerializer()
+    reader = ProjectDependenciesFileReader(results_path)
+    dependencies = reader.read(serializer)
 
-    return _build_filter_chain(
-        local_modules=set(result.module_imports.keys()),
-        max_depth=max_depth,
+    configurable_filter = ConfigurableFilter(
         excluded_patterns=excluded_patterns_set,
         filtered_patterns=filtered_patterns_set,
-    ).apply_filter(result)
-
-
-def _build_filter_chain(
-    *,
-    local_modules: Set[Module],
-    max_depth: Optional[int],
-    excluded_patterns: Set[str],
-    filtered_patterns: Set[str],
-) -> ResultFilterChain:
-    filters: List[ParseResultFilter] = []
-
-    if max_depth:
-        filters.append(LimitMaxDepthResultFilter(max_depth))
-    if excluded_patterns:
-        filters.append(ExcludePatternsResultFilter(excluded_patterns))
-    if filtered_patterns:
-        filters.append(FilterPatternsResultFilter(filtered_patterns))
-
-    filters.extend(
-        (
-            StripNonLocalModulesResultFilter(local_modules),
-            HideModulesWithoutLinksResultFilter(),
-        )
+        max_depth=max_depth or 0,
     )
 
-    return ResultFilterChain(filters)
+    return configurable_filter.apply_filter(dependencies)
 
 
 run.add_command(generate)

@@ -44,7 +44,7 @@ def _run_lint() -> None:
 
 
 def _run_tests() -> None:
-    _run_and_die_if_error(cmd("pytest", "-vv", "tests", "--cov=."))
+    _run_and_die_if_error(cmd("pytest", "-vv", ".", "--cov=."))
 
 
 run.add_command(fmt)

@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  ci-back:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

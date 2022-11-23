@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spaghetti"
-version = "0.2.0"
+version = "0.3.0"
 description = "Who doesn't like spaghetti?"
 authors = ["Denis BOURGE <denis.bourge@sharingcloud.com>"]
 license = "MIT"
@@ -50,7 +50,7 @@ flake8-isort = ["+*"]
 pyflakes = ["+*"]
 pycodestyle = ["+*", "-W503"]
 
-[tool.flakeheaven.exceptions."tests/"]
+[tool.flakeheaven.exceptions."spaghetti/tests/"]
 flake8-bandit = ["-S101"]
 
 [tool.coverage]
@@ -62,7 +62,9 @@ omit = [
 [tool.mypy]
 warn_return_any = true
 warn_unused_configs = true
-exclude = "tests/fixtures"
+exclude = [
+    "spaghetti/tests/fixtures"
+]
 
 [[tool.mypy.overrides]]
 module = "duct"

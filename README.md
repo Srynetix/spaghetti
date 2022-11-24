@@ -4,6 +4,8 @@
 
 Trace your Python module dependencies to have a better picture before cleaning!
 
+You can find a web app around **spaghetti** here: [spaghetti-ui](https://github.com/Srynetix/spaghetti-ui)
+
 ## Requirements
 
 - Python 3.9+

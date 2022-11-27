@@ -4,18 +4,17 @@ from typing import Any, Callable, Optional
 
 import click
 
+from spaghetti.filtering.implementations.configurable import ConfigurableFilter
 from spaghetti.io.implementations.file import (
     ProjectDependenciesFileReader,
     ProjectDependenciesFileWriter,
 )
 from spaghetti.models.project_dependencies import ProjectDependencies
+from spaghetti.parsing.source_parser import SourceParser
+from spaghetti.reporting.implementations.console_report import ConsoleReport
+from spaghetti.reporting.implementations.graph_report import GraphReport
 from spaghetti.reporting.implementations.plantuml_report import PlantUMLReport
-
-from .filtering.implementations.configurable import ConfigurableFilter
-from .parsing.source_parser import SourceParser
-from .reporting.implementations.console_report import ConsoleReport
-from .reporting.implementations.graph_report import GraphReport
-from .serialization.implementations.json_serializer import (
+from spaghetti.serialization.implementations.json_serializer import (
     ProjectDependenciesJsonSerializer,
 )
 

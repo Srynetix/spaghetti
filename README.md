@@ -9,14 +9,14 @@ You can find a web app around **spaghetti** here: [spaghetti-ui](https://github.
 ## Requirements
 
 - Python 3.9+
-- Poetry
 
-## How to build
+## How to install
 
-You need to build a wheel/zip using Poetry, then you can install it globally using `pip`.
+The project is maintained using [Poetry](https://python-poetry.org/), but you can directly use `pip` like this:
 
-    poetry build
-    pip install ./dist/spaghetti*.whl
+    pip install git+https://github.com/Srynetix/spaghetti#v0.3.0
+
+Then you can type `spaghetti` to execute the command-line tool.
 
 ## How to use
 
